@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Seminar Registration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- Background Elements -->
+    <div class="blob shape-1"></div>
+    <div class="blob shape-2"></div>
+    <div class="blob shape-3"></div>
+
+    <!-- Intro Animation Screen -->
+    <section id="intro-screen" class="screen active">
+        <div class="intro-content">
+            <h1 class="intro-title">Welcome to the</h1>
+            <h2 class="intro-subtitle">Book Your Demo Class</h2>
+            
+            <div class="loader-container">
+                <div class="glowing-rings">
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                </div>
+                <p class="loading-text">Preparing your experience<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></p>
+            </div>
+
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Screen -->
+    <section id="form-screen" class="screen hidden">
+        <div class="glass-container">
+            <div class="form-header">
+                <h2>Registration Form</h2>
+                <p>Please fill in your details to secure your spot.</p>
+            </div>
+            
+            <form id="registration-form">
+                <div class="input-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="John Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="fatherName">Father's Name</label>
+                    <input type="text" id="fatherName" name="fatherName" placeholder="Richard Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="9876543210" pattern="[0-9]{10}" title="Please enter exactly 10 digits" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="currentClass">Current Class</label>
+                    <input type="text" id="currentClass" name="currentClass" placeholder="e.g. 11th, 12th" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="class10Percentage">Class 10 Percentage (%)</label>
+                    <input type="number" id="class10Percentage" name="class10Percentage" min="0" max="100" step="0.01" placeholder="e.g. 85.5" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="exam">Target Exam</label>
+                    <select id="exam" name="exam" required>
+                        <option value="" disabled selected>Select an exam</option>
+                        <option value="NEET">NEET</option>
+                        <option value="JEE">JEE</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Select Webinar Date (Only Sat, Sun)</label>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button type="button" class="calendar-nav prev-month">&lt;</button>
+                            <span class="calendar-month-year">September 2026</span>
+                            <button type="button" class="calendar-nav next-month">&gt;</button>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-day-name">SUN</div>
+                            <div class="calendar-day-name">MON</div>
+                            <div class="calendar-day-name">TUE</div>
+                            <div class="calendar-day-name">WED</div>
+                            <div class="calendar-day-name">THU</div>
+                            <div class="calendar-day-name">FRI</div>
+                            <div class="calendar-day-name">SAT</div>
+                            <!-- Days populated by JS -->
+                        </div>
+                        <div class="calendar-selected-time">
+                            Selected Time: 4:00 PM - 5:00 PM (IST)
+                        </div>
+                        <input type="hidden" id="selectedDate" name="selectedDate" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>Register Now</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Success Screen -->
+    <section id="success-screen" class="screen hidden">
+        <div class="success-content glass-container">
+            <div class="checkmark-circle">
+                <div class="background"></div>
+                <div class="checkmark draw"></div>
+            </div>
+            <h2>Registration Successful!</h2>
+            <p>Thank you for registering. We look forward to seeing you at the seminar.</p>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
