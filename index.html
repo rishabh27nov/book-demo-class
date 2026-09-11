@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Select Webinar Date (Only Sat, Sun)</label>
+                    <label>Select Webinar Date (Sunday only)</label>
                     <div class="calendar-container">
                         <div class="calendar-header">
                             <button type="button" class="calendar-nav prev-month">&lt;</button>
@@ -107,6 +107,9 @@
                             Selected Time: 4:00 PM - 5:00 PM (IST)
                         </div>
                         <input type="hidden" id="selectedDate" name="selectedDate" required>
+                        <input type="hidden" id="eventDateTime" name="eventDateTime">
+                        <input type="hidden" id="reminderDateTime" name="reminderDateTime">
+                        <input type="hidden" name="reminderMinutes" value="20">
                     </div>
                 </div>
 

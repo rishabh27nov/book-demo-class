@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Custom Calendar Logic
     const calendarContainer = document.querySelector('.calendar-container');
+    let selectedDateValue = null;
     if (calendarContainer) {
         const grid = document.querySelector('.calendar-grid');
         const monthYearText = document.querySelector('.calendar-month-year');
@@ -27,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
-        let selectedDateValue = null;
-
         function renderCalendar(month, year) {
             // Clear existing days but keep the day names
             const dayElements = grid.querySelectorAll('.calendar-day');
@@ -58,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dateOfCell = new Date(year, month, i);
                 const dayOfWeek = dateOfCell.getDay();
                 
-                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
+                const isWeekend = dayOfWeek === 0; // Sunday only
                 const isPast = dateOfCell < today;
                 
                 if (!isWeekend || isPast) {
@@ -112,10 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault(); // Prevent page reload
 
         const selectedDateInput = document.getElementById('selectedDate');
+        const eventDateTimeInput = document.getElementById('eventDateTime');
+        const reminderDateTimeInput = document.getElementById('reminderDateTime');
         if (!selectedDateInput.value) {
             alert('Please select a webinar date from the calendar.');
             return;
         }
+
+        // The seminar starts at 4:00 PM IST; send an unambiguous timestamp to the backend.
+        const eventDate = selectedDateValue;
+        const datePart = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')}`;
+        eventDateTimeInput.value = `${datePart}T16:00:00+05:30`;
+        reminderDateTimeInput.value = `${datePart}T15:40:00+05:30`;
 
         const submitBtn = registrationForm.querySelector('.submit-btn');
         const originalBtnText = submitBtn.innerHTML;
@@ -134,10 +141,41 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors' // Use no-cors to prevent CORS issues with Google Apps Script
+        function checkDuplicate() {
+            return new Promise((resolve, reject) => {
+                const callbackName = `duplicateCheck_${Date.now()}`;
+                const checkScript = document.createElement('script');
+                const cleanup = () => {
+                    delete window[callbackName];
+                    checkScript.remove();
+                };
+
+                window[callbackName] = (result) => {
+                    cleanup();
+                    resolve(result.exists);
+                };
+
+                checkScript.onerror = () => {
+                    cleanup();
+                    reject(new Error('Unable to verify registration.'));
+                };
+
+                checkScript.src = `${SCRIPT_URL}?action=check&callback=${callbackName}&email=${encodeURIComponent(formData.get('email'))}&phone=${encodeURIComponent(formData.get('phone'))}`;
+                document.body.appendChild(checkScript);
+            });
+        }
+
+        checkDuplicate()
+        .then((duplicateFound) => {
+            if (duplicateFound) {
+                throw new Error('User already exists with this email or phone number.');
+            }
+
+            return fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            });
         })
         .then(() => {
             // Hide form, show success animation
@@ -152,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error!', error.message);
-            alert('Something went wrong. Please try again.');
+            alert(error.message || 'Something went wrong. Please try again.');
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
         });
