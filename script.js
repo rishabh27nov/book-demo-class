@@ -57,10 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dateOfCell = new Date(year, month, i);
                 const dayOfWeek = dateOfCell.getDay();
                 
-                const isWeekend = dayOfWeek === 0; // Sunday only
+                const isBookingDay = [2, 4, 5].includes(dayOfWeek); // Tuesday, Thursday and Friday
                 const isPast = dateOfCell < today;
                 
-                if (!isWeekend || isPast) {
+                if (!isBookingDay || isPast) {
                     dayDiv.classList.add('disabled');
                 } else {
                     dayDiv.classList.add('available');
@@ -111,18 +111,24 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault(); // Prevent page reload
 
         const selectedDateInput = document.getElementById('selectedDate');
+        const selectedTimeInput = document.getElementById('selectedTime');
         const eventDateTimeInput = document.getElementById('eventDateTime');
         const reminderDateTimeInput = document.getElementById('reminderDateTime');
-        if (!selectedDateInput.value) {
-            alert('Please select a webinar date from the calendar.');
+        if (!selectedDateInput.value || !selectedTimeInput.value) {
+            alert('Please select a booking date and time slot.');
             return;
         }
 
-        // The seminar starts at 4:00 PM IST; send an unambiguous timestamp to the backend.
+        // Send the chosen booking slot as an unambiguous IST timestamp to the backend.
         const eventDate = selectedDateValue;
         const datePart = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')}`;
-        eventDateTimeInput.value = `${datePart}T16:00:00+05:30`;
-        reminderDateTimeInput.value = `${datePart}T15:40:00+05:30`;
+        const [startTime] = selectedTimeInput.value.split('-');
+        const [startHour, startMinute] = startTime.split(':').map(Number);
+        const reminderTime = new Date(2000, 0, 1, startHour, startMinute - 20);
+        const reminderHours = String(reminderTime.getHours()).padStart(2, '0');
+        const reminderMinutes = String(reminderTime.getMinutes()).padStart(2, '0');
+        eventDateTimeInput.value = `${datePart}T${startTime}:00+05:30`;
+        reminderDateTimeInput.value = `${datePart}T${reminderHours}:${reminderMinutes}:00+05:30`;
 
         const submitBtn = registrationForm.querySelector('.submit-btn');
         const originalBtnText = submitBtn.innerHTML;

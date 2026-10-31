@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Select Webinar Date (Sunday only)</label>
+                    <label>Select Demo Class Date (Tuesday, Thursday or Friday)</label>
                     <div class="calendar-container">
                         <div class="calendar-header">
                             <button type="button" class="calendar-nav prev-month">&lt;</button>
@@ -103,8 +103,14 @@
                             <div class="calendar-day-name">SAT</div>
                             <!-- Days populated by JS -->
                         </div>
-                        <div class="calendar-selected-time">
-                            Selected Time: 4:00 PM - 5:00 PM (IST)
+                        <div class="input-group time-slot-group">
+                            <label for="selectedTime">Select Time Slot (IST)</label>
+                            <select id="selectedTime" name="selectedTime" required>
+                                <option value="" disabled selected>Select a time slot</option>
+                                <option value="17:30-18:30">5:30 PM - 6:30 PM</option>
+                                <option value="18:30-19:30">6:30 PM - 7:30 PM</option>
+                                <option value="19:30-20:30">7:30 PM - 8:30 PM</option>
+                            </select>
                         </div>
                         <input type="hidden" id="selectedDate" name="selectedDate" required>
                         <input type="hidden" id="eventDateTime" name="eventDateTime">
